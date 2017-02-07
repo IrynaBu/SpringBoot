@@ -18,8 +18,8 @@ public class CheckinJmsTemplate
 	{
 		JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
 		jmsTemplate.setDefaultDestinationName(MessageQueuesName.CHECKIN_MESSAGE_QUEUE);
-//		jmsTemplate.setExplicitQosEnabled(true);
-//		jmsTemplate.setPriority(9);
+		jmsTemplate.setExplicitQosEnabled(true);
+		jmsTemplate.setPriority(7);
 		return jmsTemplate;
 	}
 }

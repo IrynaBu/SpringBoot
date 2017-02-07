@@ -13,13 +13,13 @@ import javax.jms.ConnectionFactory;
 @Component
 public class FrozenJmsTemplate
 {
-	@Bean(name = JmsTemplateNames.CHECKIN_JMS_MESSAGE_TEMPLATE)
+	@Bean(name = JmsTemplateNames.FROZEN_JMS_MESSAGE_TEMPLATE)
 	public JmsTemplate frozenJmsMessageTemplate(ConnectionFactory connectionFactory)
 	{
 		JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
 		jmsTemplate.setDefaultDestinationName(MessageQueuesName.FROZEN_MESSAGE_QUEUE);
-		//		jmsTemplate.setExplicitQosEnabled(true);
-		//		jmsTemplate.setPriority(9);
+		jmsTemplate.setExplicitQosEnabled(true);
+		jmsTemplate.setPriority(9);
 		return jmsTemplate;
 	}
 }

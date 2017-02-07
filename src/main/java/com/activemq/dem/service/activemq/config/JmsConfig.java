@@ -2,7 +2,9 @@ package com.activemq.dem.service.activemq.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQPrefetchPolicy;
 import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
@@ -15,6 +17,7 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.SimpleMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.jms.ConnectionFactory;
 import java.beans.PropertyVetoException;
@@ -24,6 +27,7 @@ import java.util.Arrays;
 
 @EnableJms
 @Configuration
+@EnableScheduling
 public class JmsConfig
 {
 
@@ -48,19 +52,26 @@ public class JmsConfig
 	public ConnectionFactory connectionFactory() {
 		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(MASTER_URL);
 		factory.setTrustedPackages(Arrays.asList("com.activemq.dem"));
-		return new PooledConnectionFactory(factory);
+		ActiveMQPrefetchPolicy prefetchPolicy = new ActiveMQPrefetchPolicy();
+		prefetchPolicy.setAll(1);
+		factory.setPrefetchPolicy(prefetchPolicy);
+		PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(factory);
+		pooledConnectionFactory.setReconnectOnException(true);
+		return pooledConnectionFactory;
 	}
 
 	@Bean
-	public JmsListenerContainerFactory<?> myFactory(DefaultJmsListenerContainerFactoryConfigurer configurer)
+	public JmsListenerContainerFactory<?> jmsListenerContainerFactory(DefaultJmsListenerContainerFactoryConfigurer configurer)
 	{
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory());
+		factory.setConcurrency("1-10");
 		// This provides all boot's default to this factory, including the message converter
 		configurer.configure(factory, connectionFactory());
 		// You could still override some of Boot's default if necessary.
 		return factory;
 	}
+
 
 	//Persistence Oracle
 	@Bean
@@ -101,7 +112,6 @@ public class JmsConfig
 		brokerService.setUseJmx(true);
 		brokerService.setBrokerName(BROKER_NAME);
 		brokerService.addConnector(MASTER_URL);
-		brokerService.start();
 		return brokerService;
 	}
 

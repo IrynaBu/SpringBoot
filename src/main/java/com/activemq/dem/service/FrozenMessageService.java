@@ -1,6 +1,6 @@
 package com.activemq.dem.service;
 
-public interface MessageService
+public interface FrozenMessageService
 {
 	void sendEmail(Email email);
 }

@@ -59,6 +59,10 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.6'
 
+    // https://mvnrepository.com/artifact/javax.jms/javax.jms-api
+    compile group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
+
+
 
     // https://mvnrepository.com/artifact/com.oracle/ojdbc14
     //compile group: 'com.oracle', name: 'ojdbc14', version: '10.2.0.4.0'

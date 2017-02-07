@@ -10,9 +10,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckinMessageListener
 {
-    @JmsListener(destination = MessageQueuesName.CHECKIN_MESSAGE_QUEUE, concurrency = "10")
+	@JmsListener(destination = MessageQueuesName.CHECKIN_MESSAGE_QUEUE, containerFactory = "jmsListenerContainerFactory")
     public void receiveMessage(Email email) {
-		log.info("Received in checkin container<" + email + ">");
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e)
+		{
+			log.error(e);
+		}
+		log.info(Thread.currentThread().getName());
     }
-
 }
