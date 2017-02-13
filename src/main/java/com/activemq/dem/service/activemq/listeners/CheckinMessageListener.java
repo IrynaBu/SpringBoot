@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Log4j
 @Component
 public class CheckinMessageListener
@@ -14,7 +16,8 @@ public class CheckinMessageListener
     public void receiveMessage(Email email) {
 		try
 		{
-			Thread.sleep(500);
+			int randomNum = ThreadLocalRandom.current().nextInt(500, 5_000 + 1);
+			Thread.sleep(randomNum);
 		}
 		catch (InterruptedException e)
 		{

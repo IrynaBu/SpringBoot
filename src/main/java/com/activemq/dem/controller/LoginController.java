@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController
 {
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET, produces={"application/json"})
 	public String login()
 	{
 		log.info("In hello");

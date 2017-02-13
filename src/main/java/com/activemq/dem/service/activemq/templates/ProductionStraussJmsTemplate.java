@@ -12,18 +12,18 @@ import javax.jms.ConnectionFactory;
 
 @Log4j
 @Component
-public class FrozenJmsTemplate
+public class ProductionStraussJmsTemplate
 {
-	@Value("${pp.jms.frozen.priority}")
+	@Value("${pp.jms.production.strauss.priority}")
 	private int priority;
 
-	@Bean(name = JmsTemplateNames.FROZEN_JMS_MESSAGE_TEMPLATE)
-	public JmsTemplate frozenJmsMessageTemplate(ConnectionFactory connectionFactory)
+	@Bean(name = JmsTemplateNames.PRODUCTION_STRAUSS_JMS_MESSAGE_TEMPLATE)
+	public JmsTemplate productionStraussJmsMessageTemplate(ConnectionFactory connectionFactory)
 	{
 		JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-		jmsTemplate.setDefaultDestinationName(MessageQueuesName.FROZEN_MESSAGE_QUEUE);
+		jmsTemplate.setDefaultDestinationName(MessageQueuesName.PRODUCTION_STRAUSS_MESSAGE_QUEUE);
 		jmsTemplate.setExplicitQosEnabled(true);
-		jmsTemplate.setPriority(9);
+		jmsTemplate.setPriority(priority);
 		return jmsTemplate;
 	}
 }

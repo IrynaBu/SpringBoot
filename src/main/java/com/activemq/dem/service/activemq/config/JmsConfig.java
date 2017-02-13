@@ -8,6 +8,7 @@ import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
+import org.apache.activemq.store.journal.JournalPersistenceAdapterFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,11 @@ public class JmsConfig
 	@Value("${org.apache.activemq.password}")
 	private String password;
 
+	@Value("${pp.jms.min}")
+	private int min;
+
+	@Value("${pp.jms.max}")
+	private int max;
 
 	private static final String MASTER_URL = "vm://localhost?broker.persistent=true";
 
@@ -65,7 +71,7 @@ public class JmsConfig
 	{
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory());
-		factory.setConcurrency("1-10");
+		factory.setConcurrency(min + "-" + max);
 		// This provides all boot's default to this factory, including the message converter
 		configurer.configure(factory, connectionFactory());
 		// You could still override some of Boot's default if necessary.
@@ -81,7 +87,18 @@ public class JmsConfig
 		jdbcPersistenceAdapter.setDataSource(oracleDs());
 		jdbcPersistenceAdapter.setBrokerName(BROKER_NAME);
 		jdbcPersistenceAdapter.setDataDirectory("${activemq.data}");
+		jdbcPersistenceAdapter.setUseLock(false);
 		return jdbcPersistenceAdapter;
+	}
+
+	@Bean
+	public JournalPersistenceAdapterFactory journalPersistenceAdapterFactory() throws PropertyVetoException
+	{
+		JournalPersistenceAdapterFactory persistenceAdapterFactory = new JournalPersistenceAdapterFactory();
+		persistenceAdapterFactory.setJournalLogFiles(5);
+		persistenceAdapterFactory.setDataSource(oracleDs());
+		persistenceAdapterFactory.setUseDatabaseLock(false);
+		return persistenceAdapterFactory;
 	}
 
 	@Bean(name = "oracleDs")
@@ -109,14 +126,10 @@ public class JmsConfig
 		BrokerService brokerService = new BrokerService();
 		brokerService.setPersistent(true);
 		brokerService.setPersistenceAdapter(jdbcPersistenceAdapter());
+		brokerService.setPersistenceFactory(journalPersistenceAdapterFactory());
 		brokerService.setUseJmx(true);
 		brokerService.setBrokerName(BROKER_NAME);
 		brokerService.addConnector(MASTER_URL);
 		return brokerService;
-	}
-
-	@Bean // Serialize message content to json using TextMessage
-	public MessageConverter jacksonJmsMessageConverter() {
-		return new SimpleMessageConverter();
 	}
 }

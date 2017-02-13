@@ -12,18 +12,18 @@ import javax.jms.ConnectionFactory;
 
 @Log4j
 @Component
-public class FrozenJmsTemplate
+public class TagUpdateJmsTemplate
 {
-	@Value("${pp.jms.frozen.priority}")
+	@Value("${pp.jms.tagsupdate.priority}")
 	private int priority;
 
-	@Bean(name = JmsTemplateNames.FROZEN_JMS_MESSAGE_TEMPLATE)
-	public JmsTemplate frozenJmsMessageTemplate(ConnectionFactory connectionFactory)
+	@Bean(name = JmsTemplateNames.TAGSUPDATE_JMS_MESSAGE_TEMPLATE)
+	public JmsTemplate tagUpdateJmsMessageTemplate(ConnectionFactory connectionFactory)
 	{
 		JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-		jmsTemplate.setDefaultDestinationName(MessageQueuesName.FROZEN_MESSAGE_QUEUE);
+		jmsTemplate.setDefaultDestinationName(MessageQueuesName.TAGSUPDATE_MESSAGE_QUEUE);
 		jmsTemplate.setExplicitQosEnabled(true);
-		jmsTemplate.setPriority(9);
+		jmsTemplate.setPriority(priority);
 		return jmsTemplate;
 	}
 }

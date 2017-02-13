@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class FrozenMessageServiceImpl implements FrozenMessageService
 {
 	@Autowired
-	@Qualifier(value = JmsTemplateNames.CHECKIN_JMS_MESSAGE_TEMPLATE)
+	@Qualifier(value = JmsTemplateNames.FROZEN_JMS_MESSAGE_TEMPLATE)
 	private JmsTemplate frozenJmsTemplate;
 
 	@Override
