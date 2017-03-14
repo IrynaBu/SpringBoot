@@ -1,7 +1,7 @@
 package com.activemq.dem.controller;
 
-import com.activemq.dem.service.Email;
 import com.activemq.dem.service.CheckinMessageService;
+import com.activemq.dem.service.Email;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

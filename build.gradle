@@ -91,6 +91,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
     compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
 
+    //description of REST api
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.4.0'
+
     testCompile('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'org.springframework.boot:spring-boot-starter-logging'
     }
